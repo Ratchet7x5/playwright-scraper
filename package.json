@@ -4,6 +4,7 @@
   "description": "scrape some data, post to DB, enjoy",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Ratchet7x5/playwright-scraper/issues"
   },
-  "homepage": ""
+  "homepage": "",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.41.1",
+    "dotenv": "16.4.5",
+    "nodemon": "^3.1.0",
+    "playwright": "1.38.0"
+  }
 }
