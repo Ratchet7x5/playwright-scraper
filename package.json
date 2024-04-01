@@ -1,0 +1,19 @@
+{
+  "name": "playwright-scraper",
+  "version": "1.0.0",
+  "description": "scrape some data, post to DB, enjoy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ratchet7x5/playwright-scraper.git"
+  },
+  "author": "Ratchet7x5",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ratchet7x5/playwright-scraper/issues"
+  },
+  "homepage": ""
+}
