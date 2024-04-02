@@ -69,7 +69,7 @@ async function getBarfootRentData() {
        * Table Property { Address (String), Suburb (String), Rent (Int), Bed (Int), Bath (Int), Car (Int) }
        */
 
-      //await browser.close();
+      await browser.close();
     });
 }
 
