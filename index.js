@@ -72,7 +72,7 @@ let fs = require("fs");
       console.table(propertyData);
 
       // save propertyData as CSV file
-      saveToCSV(propertyData);
+      //saveToCSV(propertyData);
 
       //construct SQL query
       /**
