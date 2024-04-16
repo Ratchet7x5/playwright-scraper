@@ -30,14 +30,14 @@ async function getBarfootRentData() {
       // innerHTML gives you the HTML and anything inside it, so <div class=something><p/></div>
       // innerText gives you just the text from elements
       let numOfProperties = await page.locator('.showing-mobile').allInnerTexts();
-      console.log(numOfProperties);
-
       let propertyData = await page.locator('.property-details').allInnerTexts();
 
-      //loop a few times?
-      let numProps = Math.ceil(Number.parseInt(numOfProperties) / 48) - 1;
+      console.log(numOfProperties);
 
-      for (let pages = 0; pages < numProps; pages++) {
+      // calculate the number of pages we have to scrape through.
+      let pagesToScrape = Math.ceil(Number.parseInt(numOfProperties) / 48) - 1;
+
+      for (let pages = 0; pages < pagesToScrape; pages++) {
         //go to end of page by clicking "end" key
         await page.keyboard.press('PageDown', { delay: 1000 });
 
@@ -50,6 +50,7 @@ async function getBarfootRentData() {
 
         await page.waitForLoadState('domcontentloaded');
 
+        //append newly scraped property data
         propertyData = propertyData.concat(await page.locator('.property-details').allInnerTexts());
 
         let pageNum = await page.url();
@@ -58,8 +59,9 @@ async function getBarfootRentData() {
 
       cleanBarfootData(propertyData);
 
-      console.log('Number of properties for rent: ' + numOfProperties + ', # of pages ' + numProps);
+      console.log('Number of properties for rent: ' + numOfProperties + ', # of pages ' + pagesToScrape);
       console.table(propertyData);
+      console.log(propertyData);
 
       // save propertyData as CSV file
       //saveToCSV(propertyData);
@@ -110,36 +112,39 @@ function cleanBarfootData(data) {
   for (let index = 0; index < data.length; index++) {
     data[index] = data[index].replace('AVAILABLE NOW\n', '');
     data[index] = data[index].replace(' per week\n', ', ');
-    data[index] = data[index].replaceAll('\n', ', ');
-    //data[index] = data[index].replace(/[$,]/g, "");
-    data[index] = data[index].replace(' Bed', ', ');
-    data[index] = data[index].replace(' Bath', ', ');
+    data[index] = data[index].replaceAll('\n', ',');
+    data[index] = data[index].replace(' Bed', ',');
+    data[index] = data[index].replace(' Bath', ',');
     data[index] = data[index].replace(' Car', '');
 
+    // remove $ and ',' value separator for the rent
     let dollarIndex = data[index].indexOf('$');
     let spaceIndex = dollarIndex + 1;
-    let fullValue = '';
+    let rent = '';
 
     while (data[index].at(spaceIndex) != ' ') {
-      fullValue += data[index].at(spaceIndex);
+      rent += data[index].at(spaceIndex);
       spaceIndex++;
     }
 
-    fullValue = fullValue.replaceAll(',', '');
-    fullValue += ',';
+    rent = rent.replaceAll(',', '');
+    rent += ',';
+
+    //remove the space after the second ','
+
 
     let newString =
-      data[index].substring(0, dollarIndex) + fullValue + data[index].substring(spaceIndex, data[index].length);
+      data[index].substring(0, dollarIndex) + rent + data[index].substring(spaceIndex, data[index].length);
 
     data[index] = newString;
   }
 
   //TODO: Entries must have 6 fields instead of 5, 7, or anything else.
   // Edge cases:
-  // 757 State Highway 16 , Kumeu, 2400, 4, 2, 5
-  // Kerikeri, 795, 4, 2, 4
-  // 2/685 Karioitahi Road, Waiuku, 300, 1, 1,
-  // Room 4, 28 Court Crescent, Panmure, 210, 1, 1, 2
+  // 757 State Highway 16 , Kumeu,2400, 4,2,5
+  // Arkles Bay,1300, 5,3,4
+  // 2/685 Karioitahi Road, Waiuku,300, 1,1,
+  // Room 4, 28 Court Crescent, Panmure,210, 1,1,2
 
   //console.log("processed data");
   //console.table(data);
