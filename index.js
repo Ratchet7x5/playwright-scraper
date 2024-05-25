@@ -97,6 +97,7 @@ function saveToCSV(propertyData) {
 
   csvFile.on('error', function (err) {
     //error handling
+    console.log('Error occurred: ', err)
   });
 
   csvData.forEach((element) => csvFile.write(element + '\r'));
